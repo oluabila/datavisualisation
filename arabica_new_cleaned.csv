@@ -1,6 +1,6 @@
 ;Acidity;Aroma;Flavor;Sweetness;altitude_mean_meters;Country.of.Origin;altitude_low_meters;altitude_high_meters
-0;8.75;8.67;8.83;10.0;2075.0;Ethiopia;1950.0;2200.0
-1;8.58;8.75;8.67;10.0;2075.0;Ethiopia;1950.0;2200.0
+0;8.75;8.67;8.83;10.0;2075.0;"Ethiopia";1950.0;2200.0
+1;8.58;8.75;8.67;10.0;2075.0;"Ethiopia";1950.0;2200.0
 2;8.42;8.42;8.5;10.0;1700.0;Guatemala;1600.0;1800.0
 3;8.42;8.17;8.58;10.0;2000.0;Ethiopia;1800.0;2200.0
 4;8.5;8.25;8.5;10.0;2075.0;Ethiopia;1950.0;2200.0
