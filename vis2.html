@@ -1,0 +1,133 @@
+
+<html>
+<head>
+    <title> Bila Olha - Sample(2) Assignment</title>
+   <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+   <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px;" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Olha Bila</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19202750</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv" target="_blank" rel="noopener">Cleaned Arabica Dataset</a>.</p>
+    <p>This data set is a subset of <a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">data</a>. My data set is a representation of some general characteristics and description of one of the most spread type of coffee all around the world - Arabica. I used Python <a href="https://github.com/oluabila/datavisualisation/blob/master/vs.ipynb" target="_blank" rel="noopener">file</a> to apply data manipulations(altering column names to fit the requirements of Vega-Lite) and filtering(cleaning NaN values).</p>
+    <p>Data set consists of information about: acidity, country of origin, mean altitude(meters), aroma, flavor, points in total 'cup', etc.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">It’s a commonly-held belief that the higher the altitude of the coffee, the better the quality. In which regions does coffee have the best quality of taste and aroma?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+    <br/>
+  <div id="vis" align="center"></div><br/>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This scatterplot shows the dependence between aroma and flavor of arabica in regions, choosen as the best according to altitude in the previous chart. Each circle represents an individual example of coffee, that has maximum points of aroma/flavor in range of countries. Each counrty is illustrated with unique color of cirles.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;"> The chart for taste characteristics shows that for most samples of coffee taste results are located in the center of the graph. classes athletes have a very narrow weight range. This is to be expected - the higher the aroma points, the higher the flavor ones (i.e. we see a lot of noise around the diagonal, rather than a straight line of dots).<p/>It is possible to emphasize two countries within their taste characteristics. The picture for Ethiopia shows the greatest combinations of aroma/flavor with the peak in 8.8/8.8 points. In the same time arabica in Guatemala is the most spread to compare with other countries' coffee.(e.g. the majority of dots are green - for Guatemala). </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used a scatterplot as it is a very effective way to show the relationship betwen two quantitative variables, taking into consideration the fact that peoples' perception is adaptive in both of horizontal and vertical position. I have choosen four countries with recpective colors: Ethiopia, Kenya, Guatemala and the United States as they are mentioned previously as countries with the best coffee according to altitude. <p/> A limitation of this plot is that it suffers from overplotting - some points are drawn on top of each other, because different countries' results may be in the same point. To reduce the impact of this I have used aggregation function of color - if the results intersect each other - it will be choosen the circle with the bigger value, demonstrating the particular country.<p/>
+</td> </tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">Only flavor and aroma values of arabica that are recorded in choosen countries are shown. </td>
+</tr>
+</tbody>
+</table>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {
+    "format": {
+      "type": "csv"    
+    },
+    "url" : "https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv"
+  },
+  "transform": [
+      {"filter": "datum.Country == 'Kenya' || datum.Country == 'Ethiopia' || datum.Country == 'Guatemala' || datum.Country == 'United States'"}
+      
+  ],
+  "config": {
+      "legend": {
+      "orient": "bottom-right",
+      "titleFontSize":12,
+      "labelFontSize":10
+    },
+    "axis": {
+      "titleFontSize":14,
+      "titlePadding":10,
+      "labelFontSize":10
+    }
+  },
+  "width":500,
+  "height":500,
+  "title": {
+      "text": "Best FLAVOR vs AROMA of coffee in particular regions",
+      "anchor": "middle",
+      "fontSize": 24
+  },
+  "layer": [
+    {
+    "mark":{"type": "point", "filled": true},
+    "encoding": {
+      "y": {
+        "title": "Flavor",
+        "field": "Flavor",
+        "type": "quantitative",
+        "scale": {"zero": false}
+      },
+      "x": {
+        "title": "Aroma",
+        "field": "Aroma",
+        "type": "quantitative",
+        "scale": {"zero": false}
+      },
+      "color": {
+        "field": "Country",
+        "type": "nominal",
+        "aggregate": "max",
+        "scale": {"range": ["blue","green","red","#FF33D7"]}
+        },
+      "size": {
+        "value": 70
+      }
+      }
+      }
+  ]
+
+}
+
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+</body>
+</html>

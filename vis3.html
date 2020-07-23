@@ -1,0 +1,121 @@
+
+<html>
+<head>
+    <title> Bila Olha - Sample(3) Assignment</title>
+   <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+   <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px;" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Olha Bila</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19202750</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv" target="_blank" rel="noopener">Cleaned Arabica Dataset</a>.</p>
+    <p>This data set is a subset of <a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">data</a>. My data set is a representation of some general characteristics and description of one of the most spread type of coffee all around the world - Arabica. I used Python <a href="https://github.com/oluabila/datavisualisation/blob/master/vs.ipynb" target="_blank" rel="noopener">file</a> to apply data manipulations(altering column names to fit the requirements of Vega-Lite) and filtering(cleaning NaN values).</p>
+    <p>Data set consists of information about: acidity, country of origin, mean altitude(meters), aroma, flavor, points in total 'cup', etc.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">It’s a commonly-held belief that the higher the altitude of the coffee, the better the quality. So, to compare different regions will the countries-leaders have the most points of 'cupping'?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+    <br/>
+  <div id="vis" align="center"></div><br/>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This bar chart shows the points in total "cupping" in all countries, represented in coffee samples.The cupping form is where we score coffee on a standardized scale—with points usually ranging from 6-10 in ten different categories such as Fragrance/Aroma, Flavor, Body, Acidity, and Balance. These scores get summed together to get a final score, usually is up to 100 points. To highlight the particular countries according the data from the previous chart I use pink color bars.    </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;"> The chart for total cup points shows that the final score is in range 79-91. This is to be expected - two outstanding countries from the second chart: Ethiopia and Guatemala are the first ones among the others. United States has occupied the third position, while Kenya is the 13th in grade, that is not as good result as it may be, according to statistics. </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used bar chart as they are the most effective at conveying quantitative information. By sorting the countries based on the values of total cup points the usability of these chart is greatly increased, e.g. it is immediately evident which country has the highest and lowest max result. To influence on our perception system I hve used a bright color to demonstrate best countries points. <p/> A limitation of this plot is that it suffers from overplotting - some points are drawn on top of each other, because different results may refer to the same country. To solve this problem I used the aggregation function of the color- if the cup points are from the same country other - it will be choosen the maximum value.<p/>
+</td> </tr>
+</tbody>
+</table>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {
+    "format": {
+      "type": "csv"    
+    },
+    "url" : "https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv"
+  },
+  "config": {
+    "axis": {
+      "titleFontSize":14,
+      "titlePadding":12,
+      "labelFontSize":10
+    }
+  },
+  "width":500,
+  "height":700,
+  "title": {
+      "text": "Total points of 'cupping' in different countries ",
+      "anchor": "middle",
+      "fontSize": 22
+  },
+  "layer": [
+    {
+    "mark":{"type": "bar"},
+    "encoding": {
+      "x": {
+        "title": "TotalCupPoints",
+        "field": "TotalCupPoints",
+        "type": "quantitative",
+        "scale": {"zero": false}
+      },
+      "y": {
+         "sort": {
+            "op": "mean",
+            "order": "descending"
+        },
+        "title": "Country",
+        "field": "Country",
+        "type": "nominal"
+      },
+      "color":{
+        
+         "condition": {
+            "test": "datum.Country == 'Kenya' || datum.Country == 'Ethiopia' || datum.Country == 'Guatemala' || datum.Country == 'United States'",
+            "value": "#C70039"
+          },
+          "value": "#bdbdbd"
+      }
+      }
+      }
+  ]
+}
+
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+</body>
+</html>

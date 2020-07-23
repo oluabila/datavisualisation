@@ -1,0 +1,141 @@
+
+<html>
+<head>
+    <title> Bila Olha - Sample(1) Assignment</title>
+   <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+   <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px;" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Olha Bila</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">19202750</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv" target="_blank" rel="noopener">Cleaned Arabica Dataset</a>.</p>
+    <p>This data set is a subset of <a href="https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv" target="_blank" rel="noopener">data</a>. My data set is a representation of some general characteristics and description of one of the most spread type of coffee all around the world - Arabica. I used Python <a href="https://github.com/oluabila/datavisualisation/blob/master/vs.ipynb" target="_blank" rel="noopener">file</a> to apply data manipulations(altering column names to fit the requirements of Vega-Lite) and filtering(cleaning NaN values).</p>
+    <p>Data set consists of information about: acidity, country of origin, mean altitude(meters), aroma, flavor, points in total 'cup', etc.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">It’s a commonly-held belief that the higher the altitude of the coffee, the better the quality. So, is it for real that the taste of coffee depends on the altitude? In which regions does coffee have the best quality?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+    <br/>
+  <div id="vis" align="center"></div><br/>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This strip chart shows the altitude, where the coffee was grown in different regions of the world. Each square represents the maximum value of acidity in the measured mean altitude in small intervals(bins), darker squares indicate the higher acidity in intervals for every country. </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;"> The chart for altitude shows that for most countries arabica is tended to grow from 1000 metres up to 2000 metres. This is to be expected - according to the other statistics of growing arabica. The many varieties of Arabica coffee plants grow within the high acidity - 6-8.5. It is possible to observe in this chart that coffee with the highest altitude and acidity(the darkest squars) is located in regions as:
+Ethiopia, Kenya, Guathemala and United States.
+<p> Although arabica has also been grown in significant altitudes in countries like: Colombia, Uganda, Mexico and Tanzania, the acidity in these places is not as high as expected. So, I will not considering the data from these regions in the next graphs.</p> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;"> I have used strip chart as position along a common axis is the most effective means of conveying quantitative information. I apply grouping the counries of origin according to mean altitude. To check the amount of acidity in intervals(bins)I apply filtering data accorging the max value of acidity. 
+ <p/> A limitation of this plot is that it suffers from overplotting - many points are drawn on top of each other. To reduce the impact of this I have used the color aggregation = 'max' - darker circles indicate higher acidity located at a specific intervals(bins). 
+ Also I use 'bins' as I wanted to group a number of more or less nearest values int order to show the brightest value on each interval per country. <p/>
+Alternative visualisations of distributions (box plots, histograms) could make a similar point but to demonstrate altutude vs acidity per country using bar chars is unefficient.
+</td> </tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">Only mean altitude values, that are not less than 200(meters) and not bigger than 2000(meters) are shown.</td>
+</tr>
+</tbody>
+</table>
+  <script type="text/javascript">
+    var yourVlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {
+    "format": {
+      "type": "csv"    
+    },
+    "url" : "https://raw.githubusercontent.com/oluabila/datavisualisation/master/arabica_new.csv"
+  },
+  "transform": [
+     {"filter": "datum.altitude_mean_meters >=200"},
+     {"filter": "datum.altitude_mean_meters <=2000"}     
+  ],
+  "config": {
+      "legend": {
+      "orient": "right",
+      "titleFontSize":12,
+      "labelFontSize":10,
+      "titlePadding":0
+    },
+    "axis": {
+      "titleFontSize":12,
+      "titlePadding":5,
+      "labelFontSize":10
+    }
+  },
+  "width":500,
+  "height":500,
+  "title": {
+      "text": "How ALTITUDE vs REGION affects the taste of coffee",
+      "anchor": "middle",
+      "fontSize": 20
+  },
+  "layer": [
+    {
+    "mark":{"type": "square", "filled": true},
+    "encoding": {
+      "x": {
+        "bin" : {"maxbins" :75},
+        "field": "altitude_mean_meters",
+        "title": "Altitude(mean) meters",
+        "type": "quantitative",
+        "scale": {"zero": false}
+      },
+      "y": {
+        "title": "Country of Origin",
+        "field": "Country",
+        "type": "nominal"
+      },
+      "color":{
+        "field" : "Acidity",
+        "type": "quantitative",
+        "aggregate":"max",
+        "scale":{
+          "range":["#FFC300","#900C3F"]
+        }
+      },
+      "size":{
+        "value":50
+      }
+    }
+    }
+  ]
+    
+}
+
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+</body>
+</html>
